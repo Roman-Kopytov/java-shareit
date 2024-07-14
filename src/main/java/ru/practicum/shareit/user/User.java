@@ -1,11 +1,10 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.marker.Marker;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 
 @Data

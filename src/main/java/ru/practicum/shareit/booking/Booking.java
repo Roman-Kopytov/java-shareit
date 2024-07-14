@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.marker.Marker;
 import ru.practicum.shareit.user.User;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data

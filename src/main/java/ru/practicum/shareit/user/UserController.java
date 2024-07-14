@@ -1,5 +1,7 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -7,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.marker.Marker;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 
