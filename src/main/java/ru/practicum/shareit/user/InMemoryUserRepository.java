@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exception.DuplicateDataException;
 
 import java.util.*;
 
@@ -60,7 +61,7 @@ public class InMemoryUserRepository implements UserRepository {
         if (!usersEmail.contains(email)) {
             usersEmail.add(email);
         } else {
-            throw new RuntimeException();
+            throw new DuplicateDataException("Email занят");
         }
     }
 

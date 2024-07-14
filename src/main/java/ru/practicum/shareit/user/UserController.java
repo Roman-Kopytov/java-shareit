@@ -39,7 +39,7 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     @Validated({Marker.Update.class})
-    public UserDto update(@Valid @RequestBody User user,
+    public UserDto update(@Valid @RequestBody UserDto user,
                           @PathVariable(value = "userId") long userId) {
         log.info("PATCH ==> /users/{}", userId);
         user.setId(userId);
@@ -50,7 +50,7 @@ public class UserController {
 
     @PostMapping
     @Validated({Marker.Create.class})
-    public UserDto create(@Valid @RequestBody User user) {
+    public UserDto create(@Valid @RequestBody UserDto user) {
         log.info("==>POST /users {}", user);
         UserDto createdUser = userService.create(user);
         log.info("POST /users <== {}", user);

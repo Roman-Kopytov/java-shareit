@@ -44,4 +44,10 @@ public class ErrorHandlingControllerAdvice {
     public ErrorResponse handleAccessDeniedException(final AccessDeniedException e) {
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler(DuplicateDataException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDuplicateDataException(final DuplicateDataException e) {
+        return new ErrorResponse((e.getMessage()));
+    }
 }

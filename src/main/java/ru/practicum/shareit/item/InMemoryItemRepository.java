@@ -37,11 +37,6 @@ public class InMemoryItemRepository implements ItemRepository {
     }
 
     @Override
-    public void delete(long itemId) {
-
-    }
-
-    @Override
     public List<Item> search(String text) {
         if (text.isEmpty()) {
             return List.of();

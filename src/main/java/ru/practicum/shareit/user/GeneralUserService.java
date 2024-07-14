@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,13 +16,15 @@ public class GeneralUserService implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDto create(User user) {
+    public UserDto create(UserDto userDto) {
+        User user = UserMapper.mapToUser(userDto);
         return UserMapper.mapToUserDto(userRepository.create(user));
     }
 
     @Override
-    public UserDto update(User user) {
-        getUserFromRepository(user.getId());
+    public UserDto update(UserDto userDto) {
+        getUserFromRepository(userDto.getId());
+        User user = UserMapper.mapToUser(userDto);
         return UserMapper.mapToUserDto(userRepository.update(user));
     }
 
