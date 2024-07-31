@@ -49,7 +49,7 @@ public class GeneralBookingService implements BookingService {
     @Override
     public BookingFullDTO approved(BookingParams params) {
         Booking savedBooking = getBookingFromRepository(params.getId());
-        if (params.getUserId() != savedBooking.getItem().getOwner().getId()) {
+        if (!params.getUserId().equals(savedBooking.getItem().getOwner().getId())) {
             throw new AccessDeniedException("User with id " + params.getUserId() + " does not allowed to approve");
         }
         if (savedBooking.getStatus().equals(BookingStatus.WAITING)) {
@@ -68,8 +68,8 @@ public class GeneralBookingService implements BookingService {
     public BookingFullDTO getById(BookingParams params) {
         Booking savedBooking = getBookingFromRepository(params.getId());
         User savedUser = getUserFromRepository(params.getUserId());
-        if (savedBooking.getBooker().getId() != savedUser.getId() &&
-                savedBooking.getItem().getOwner().getId() != savedUser.getId()) {
+        if (!savedBooking.getBooker().getId().equals(savedUser.getId()) &&
+                !savedBooking.getItem().getOwner().getId().equals(savedUser.getId())) {
             throw new AccessDeniedException("User with id: " + savedUser.getId() + " access denied");
         }
         return bookingMapper.mapToDTO(savedBooking);
