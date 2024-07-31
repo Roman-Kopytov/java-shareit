@@ -80,14 +80,15 @@ public class GeneralItemService implements ItemService {
                 ));
         List<ItemDto> dtos = items.stream().map(itemMapper::mapToDto).toList();
 
-        dtos.stream()
+        List<ItemDto> itemDtos = dtos.stream()
                 .peek(dto -> {
                     List<Comment> comments = commentRepository.findByItem_Id(dto.getId());
                     List<CommentDto> commentDtos = comments.stream().map(commentMapper::mapToCommentDto).toList();
                     dto.setComments(commentDtos);
                 })
                 .toList();
-        return dtos;
+        return setBookings(itemDtos);
+
     }
 
     @Transactional
