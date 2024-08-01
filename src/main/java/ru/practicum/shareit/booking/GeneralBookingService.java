@@ -27,7 +27,7 @@ public class GeneralBookingService implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingMapper bookingMapper;
-    private final static Sort NEWEST_FIRST = Sort.by(Sort.Direction.DESC, "start");
+    private static final Sort NEWEST_FIRST = Sort.by(Sort.Direction.DESC, "start");
 
     @Transactional
     @Override
