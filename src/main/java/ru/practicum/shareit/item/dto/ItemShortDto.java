@@ -22,6 +22,5 @@ public class ItemShortDto {
 
     private List<Comment> comments;
 
-    public record BookingDto(Long id, Long bookerId) {
-    }
+
 }

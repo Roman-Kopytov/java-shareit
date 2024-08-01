@@ -1,9 +1,9 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.BookingStatus;
 import ru.practicum.shareit.booking.dto.BookingCreateDTO;
 import ru.practicum.shareit.booking.dto.BookingFullDTO;
 import ru.practicum.shareit.booking.dto.BookingMapper;
@@ -27,6 +27,7 @@ public class GeneralBookingService implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingMapper bookingMapper;
+    private final static Sort NEWEST_FIRST = Sort.by(Sort.Direction.DESC, "start");
 
     @Transactional
     @Override
@@ -35,6 +36,9 @@ public class GeneralBookingService implements BookingService {
         Item savedItem = getItemFromRepository(bookingDto.getItemId());
         if (!savedItem.getAvailable()) {
             throw new NotAvailableItem("Item does not available");
+        }
+        if (bookingRepository.isAvailableForBooking(savedItem.getId(), bookingDto.getStart(), bookingDto.getEnd())) {
+            throw new NotAvailableItem("Booking for these dates are not available");
         }
         if (bookerId == savedItem.getOwner().getId()) {
             throw new AccessDeniedException("Owner does  not allowed to create a booking");
@@ -92,17 +96,17 @@ public class GeneralBookingService implements BookingService {
 
     private List<Booking> getBookingByStateAndOwner(BookingState state, User owner) {
         if (state.equals(BookingState.ALL)) {
-            return bookingRepository.findByItemOwnerOrderByStartDesc(owner);
+            return bookingRepository.findByItemOwner(owner, NEWEST_FIRST);
         } else if (state.equals(BookingState.CURRENT)) {
-            return bookingRepository.findByItemOwnerAndEndAfterAndStartBeforeOrderByStartDesc(owner, LocalDateTime.now(), LocalDateTime.now());
+            return bookingRepository.findByItemOwnerAndEndAfterAndStartBefore(owner, LocalDateTime.now(), LocalDateTime.now(), NEWEST_FIRST);
         } else if (state.equals(BookingState.PAST)) {
-            return bookingRepository.findByItemOwnerAndEndBeforeOrderByStartDesc(owner, LocalDateTime.now());
+            return bookingRepository.findByItemOwnerAndEndBefore(owner, LocalDateTime.now(), NEWEST_FIRST);
         } else if (state.equals(BookingState.FUTURE)) {
-            return bookingRepository.findByItemOwnerAndStartAfterOrderByStartDesc(owner, LocalDateTime.now());
+            return bookingRepository.findByItemOwnerAndStartAfter(owner, LocalDateTime.now(), NEWEST_FIRST);
         } else if (state.equals(BookingState.REJECTED)) {
-            return bookingRepository.findByItemOwnerAndStatusEqualsOrderByStartDesc(owner, BookingStatus.REJECTED);
+            return bookingRepository.findByItemOwnerAndStatusIn(owner, BookingStatus.REJECTED, BookingStatus.CANCELED, NEWEST_FIRST);
         } else if (state.equals(BookingState.WAITING)) {
-            return bookingRepository.findByItemOwnerAndStatusEqualsOrderByStartDesc(owner, BookingStatus.WAITING);
+            return bookingRepository.findByItemOwnerAndStatusEquals(owner, BookingStatus.WAITING, NEWEST_FIRST);
         } else {
             return List.of();
         }
@@ -110,17 +114,17 @@ public class GeneralBookingService implements BookingService {
 
     private List<Booking> getBookingByStateAndBooker(BookingState state, User savedUser) {
         if (state.equals(BookingState.ALL)) {
-            return bookingRepository.findByBookerOrderByStartDesc(savedUser);
+            return bookingRepository.findByBooker(savedUser, NEWEST_FIRST);
         } else if (state.equals(BookingState.CURRENT)) {
-            return bookingRepository.findByBookerAndEndAfterAndStartBeforeOrderByStartDesc(savedUser, LocalDateTime.now(), LocalDateTime.now());
+            return bookingRepository.findByBookerAndEndAfterAndStartBefore(savedUser, LocalDateTime.now(), LocalDateTime.now(), NEWEST_FIRST);
         } else if (state.equals(BookingState.PAST)) {
-            return bookingRepository.findByBookerAndEndBeforeOrderByStartDesc(savedUser, LocalDateTime.now());
+            return bookingRepository.findByBookerAndEndBefore(savedUser, LocalDateTime.now(), NEWEST_FIRST);
         } else if (state.equals(BookingState.FUTURE)) {
-            return bookingRepository.findByBookerAndStartAfterOrderByStartDesc(savedUser, LocalDateTime.now());
+            return bookingRepository.findByBookerAndStartAfter(savedUser, LocalDateTime.now(), NEWEST_FIRST);
         } else if (state.equals(BookingState.REJECTED)) {
-            return bookingRepository.findByBookerAndStatusEqualsOrderByStartDesc(savedUser, BookingStatus.REJECTED);
+            return bookingRepository.findByBookerAndStatusIn(savedUser, BookingStatus.REJECTED, BookingStatus.CANCELED, NEWEST_FIRST);
         } else if (state.equals(BookingState.WAITING)) {
-            return bookingRepository.findByBookerAndStatusEqualsOrderByStartDesc(savedUser, BookingStatus.WAITING);
+            return bookingRepository.findByBookerAndStatusEquals(savedUser, BookingStatus.WAITING, NEWEST_FIRST);
         } else {
             return List.of();
         }
@@ -142,6 +146,4 @@ public class GeneralBookingService implements BookingService {
                 .orElseThrow(() -> new NotFoundException("Booking not found with id: " + bookingId));
 
     }
-
-//
 }

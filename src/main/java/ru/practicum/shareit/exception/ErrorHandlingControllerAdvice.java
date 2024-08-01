@@ -57,14 +57,11 @@ public class ErrorHandlingControllerAdvice {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
-
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorResponse handleJdbcSQLIntegrityConstraintViolationException(DataIntegrityViolationException ex) {
         log.error("Unique constraint violation: {}", ex.getMessage());
-
         return new ErrorResponse("Email уже существует");
     }
-
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -82,5 +79,11 @@ public class ErrorHandlingControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingStatusException(final BookingStatusException e) {
         return new ErrorResponse((e.getMessage()));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleRuntimeException(final RuntimeException e) {
+        return new ErrorResponse(e.getMessage());
     }
 }

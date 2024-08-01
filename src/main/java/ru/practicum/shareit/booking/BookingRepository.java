@@ -1,7 +1,8 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.shareit.BookingStatus;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
@@ -11,31 +12,46 @@ import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    List<Booking> findByItemOwnerAndStartAfterOrderByStartDesc(User booker, LocalDateTime now);
+    @Query("select (count(b) > 0) from Booking b " +
+            "where b.item.id = ?1  and b.status = 'APPROVED' " +
+            "and b.start <= ?3  and b.end >= ?2")
+    boolean isAvailableForBooking(Long itemId, LocalDateTime start, LocalDateTime end);
 
-    List<Booking> findByItemOwnerAndEndAfterAndStartBeforeOrderByStartDesc(User booker, LocalDateTime now1, LocalDateTime now2);
+    List<Booking> findByItemOwnerAndStartAfter(User booker, LocalDateTime now, Sort sort);
 
-    List<Booking> findByItemOwnerAndStatusEqualsOrderByStartDesc(User booker, BookingStatus status);
+    List<Booking> findByItemOwnerAndEndAfterAndStartBefore(User booker, LocalDateTime now1, LocalDateTime now2, Sort sort);
 
-    List<Booking> findByBookerOrderByStartDesc(User booker);
+    @Query("select b from Booking b " +
+            "where b.item.owner = ?1 and b.status in (?2, ?3)")
+    List<Booking> findByItemOwnerAndStatusIn(User owner, BookingStatus status1, BookingStatus status2, Sort sort);
 
-    List<Booking> findByItemOwnerOrderByStartDesc(User owner);
+    List<Booking> findByItemOwnerAndStatusEquals(User booker, BookingStatus status, Sort sort);
 
-    List<Booking> findByItemOwnerAndEndBeforeOrderByStartDesc(User savedUser, LocalDateTime now);
+    List<Booking> findByBooker(User booker, Sort sort);
 
-    List<Booking> findByBookerAndEndAfterAndStartBeforeOrderByStartDesc(User savedUser, LocalDateTime now, LocalDateTime now1);
+    List<Booking> findByItemOwner(User owner, Sort sort);
 
-    List<Booking> findByBookerAndEndBeforeOrderByStartDesc(User savedUser, LocalDateTime now);
+    List<Booking> findByItemOwnerAndEndBefore(User savedUser, LocalDateTime now, Sort sort);
 
-    List<Booking> findByBookerAndStartAfterOrderByStartDesc(User savedUser, LocalDateTime now);
+    List<Booking> findByBookerAndEndAfterAndStartBefore(User savedUser, LocalDateTime now, LocalDateTime now1, Sort sort);
 
-    List<Booking> findByBookerAndStatusEqualsOrderByStartDesc(User savedUser, BookingStatus bookingStatus);
+    List<Booking> findByBookerAndEndBefore(User savedUser, LocalDateTime now, Sort sort);
 
-    List<Booking> findByItemIdAndStatusEqualsOrderByEndDesc(Long id, BookingStatus status);
+    List<Booking> findByBookerAndStartAfter(User savedUser, LocalDateTime now, Sort sort);
+
+    List<Booking> findByBookerAndStatusEquals(User savedUser, BookingStatus bookingStatus, Sort sort);
+
+    @Query("select b from Booking b " +
+            "where b.booker = ?1 and b.status in (?2, ?3)")
+    List<Booking> findByBookerAndStatusIn(User booker, BookingStatus status1, BookingStatus status2, Sort sort);
 
     Optional<Booking> findByBookerAndItem(User user, Item item);
 
-    Optional<Booking> findTop1BookingByItem_IdAndStartBeforeAndStatusOrderByEndDesc(Long id, LocalDateTime now, BookingStatus bookingStatus);
+    @Query("select b from Booking b " +
+            "where b.item IN ?1 and b.status = ('APPROVED')")
+    List<Booking> findApprovedForItems(List<Item> items, Sort start);
 
-    Optional<Booking> findTop1BookingByItem_IdAndStartAfterAndStatusOrderByEndAsc(Long id, LocalDateTime now, BookingStatus bookingStatus);
+    @Query("select b from Booking b " +
+            "where b.item = ?1 and b.status = ('APPROVED')")
+    List<Booking> findApprovedForItem(Item savedItem, Sort start);
 }
