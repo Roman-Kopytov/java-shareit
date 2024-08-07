@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.marker.Marker;
 import ru.practicum.shareit.request.ItemRequest;
 
 
@@ -15,15 +14,15 @@ import ru.practicum.shareit.request.ItemRequest;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDto {
+public class ItemCreateDto {
     private Long id;
     @Size(max = 100)
-    @NotBlank(groups = Marker.Create.class)
+    @NotBlank
     private String name;
     @Size(max = 200)
-    @NotBlank(groups = Marker.Create.class)
+    @NotBlank
     private String description;
-    @NotNull(groups = Marker.Create.class)
+    @NotNull
     private Boolean available;
     private ItemRequest request;
 }
