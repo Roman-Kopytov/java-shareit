@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookingCreateDTO;
+import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingFullDTO;
 import ru.practicum.shareit.booking.dto.BookingParams;
 
@@ -19,7 +19,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public BookingFullDTO create(@Valid @RequestBody BookingCreateDTO booking,
+    public BookingFullDTO create(@Valid @RequestBody BookingRequestDto booking,
                                  @RequestHeader(USER_ID) long bookerId) {
         log.info("==>POST /bookings {}, bookerId={}", booking, bookerId);
         BookingFullDTO bookingDTO = bookingService.create(booking, bookerId);

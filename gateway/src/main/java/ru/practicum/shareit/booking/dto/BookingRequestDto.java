@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 @StartBeforeEnd
-public class BookingCreateDTO implements StartEnd {
+public class BookingRequestDto implements StartEnd {
 
     @NotNull
     @FutureOrPresent
