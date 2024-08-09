@@ -18,7 +18,7 @@ public interface ItemService {
 
     ItemShortDto update(ItemUpdateDTO item, long ownerId);
 
-    List<ItemShortDto> search(String text);
+    List<ItemShortDto> search(String text, long userId);
 
     List<ItemFullDto> getAllOwnerItems(long userId);
 

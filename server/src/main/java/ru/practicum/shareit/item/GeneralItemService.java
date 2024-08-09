@@ -138,7 +138,7 @@ public class GeneralItemService implements ItemService {
     }
 
     @Override
-    public List<ItemShortDto> search(String text) {
+    public List<ItemShortDto> search(String text, long userId) {
         return itemRepository.searchByNameOrDescription(text).stream()
                 .map(itemMapper::mapToShortDto)
                 .collect(toList());

@@ -1,13 +1,13 @@
 package ru.practicum.shareit.booking;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookingFullDTO;
 import ru.practicum.shareit.booking.dto.BookingParams;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
-
-import java.util.List;
+import ru.practicum.shareit.booking.dto.BookingState;
 
 @RestController
 @RequestMapping(path = "/bookings")
@@ -15,19 +15,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingController {
     private static final String USER_ID = "X-Sharer-User-Id";
-    private final BookingService bookingService;
+    private final BookingClient bookingClient;
 
     @PostMapping
-    public BookingFullDTO create(@RequestBody BookingRequestDto booking,
+    public ResponseEntity<Object> create(@Valid @RequestBody BookingRequestDto booking,
                                  @RequestHeader(USER_ID) long bookerId) {
         log.info("==>POST /bookings {}, bookerId={}", booking, bookerId);
-        BookingFullDTO bookingDTO = bookingService.create(booking, bookerId);
-        log.info("POST /bookings <== {}, bookerId={}", booking, bookerId);
-        return bookingDTO;
+        ResponseEntity<Object> createdBooking = bookingClient.createBooking(booking, bookerId);
+        log.info("POST /bookings <== {}, bookerId={}", createdBooking, bookerId);
+        return createdBooking;
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingFullDTO approved(@PathVariable(name = "bookingId") long bookingId,
+    public ResponseEntity<Object> approved(@PathVariable(name = "bookingId") long bookingId,
                                    @RequestParam(value = "approved") boolean approved,
                                    @RequestHeader(USER_ID) long bookerId) {
         log.info("==>PATCH /bookings/{}?approved={} bookerId={}", bookingId, approved, bookerId);
@@ -36,31 +36,31 @@ public class BookingController {
                 .userId(bookerId)
                 .approved(approved)
                 .build();
-        BookingFullDTO bookingDto = bookingService.approved(params);
+        ResponseEntity<Object> bookingDto = bookingClient.approvedBooking(params);
         log.info("PATCH <== /bookings/{}?approved={} bookerId={}", bookingId, approved, bookerId);
         return bookingDto;
     }
 
     @GetMapping("/{bookingId}")
-    public BookingFullDTO getById(@PathVariable(name = "bookingId") long bookingId,
+    public ResponseEntity<Object> getById(@PathVariable(name = "bookingId") long bookingId,
                                   @RequestHeader(USER_ID) long userId) {
         log.info("==>GET /bookings/{} by {}", bookingId, userId);
         BookingParams params = BookingParams.builder()
                 .id(bookingId)
                 .userId(userId)
                 .build();
-        BookingFullDTO bookingDto = bookingService.getById(params);
+        ResponseEntity<Object> bookingDto = bookingClient.getBooking(params);
         log.info("GET /bookings <== {} by {}", bookingDto, userId);
         return bookingDto;
     }
 
     @GetMapping
-    public List<BookingFullDTO> getBookings(@RequestParam(value = "state", defaultValue = "ALL") String stateParam,
+    public ResponseEntity<Object> getBookings(@RequestParam(value = "state", defaultValue = "ALL") String stateParam,
                                             @RequestHeader(USER_ID) long userId) {
         log.info("==>GET /bookings/?state={} by {}", stateParam, userId);
 
         BookingState state = checkBookingState(stateParam);
-        List<BookingFullDTO> bookingDto = bookingService.getUserBookings(state, userId);
+        ResponseEntity<Object> bookingDto = bookingClient.getBookings(state, userId);
         log.info("GET /bookings <== {} by {}", bookingDto, userId);
         return bookingDto;
     }
@@ -74,12 +74,12 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public List<BookingFullDTO> getOwnerBookings(@RequestParam(value = "state", defaultValue = "ALL") String stateParam,
+    public ResponseEntity<Object> getOwnerBookings(@RequestParam(value = "state", defaultValue = "ALL") String stateParam,
                                                  @RequestHeader(USER_ID) long userId) {
         log.info("==>GET /bookings/?state={} by {}", stateParam, userId);
 
         BookingState state = checkBookingState(stateParam);
-        List<BookingFullDTO> bookingDto = bookingService.getOwnerBookings(state, userId);
+        ResponseEntity<Object> bookingDto = bookingClient.getOwnerBookings(state, userId);
         log.info("GET /bookings <== {} by {}", bookingDto, userId);
         return bookingDto;
     }

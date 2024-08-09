@@ -8,7 +8,7 @@ public enum BookingState {
     WAITING,
     REJECTED;
 
-    static BookingState from(String state) {
+    public static BookingState from(String state) {
         for (BookingState value : BookingState.values()) {
             if (value.name().equals(state)) {
                 return value;
