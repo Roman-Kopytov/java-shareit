@@ -138,7 +138,6 @@ public class GeneralBookingService implements BookingService {
     private User getUserFromRepository(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
-
     }
 
     private Booking getBookingFromRepository(long bookingId) {

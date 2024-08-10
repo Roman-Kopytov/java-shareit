@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemCreateDto {
-    private Long id;
     @Size(max = 100)
     @NotBlank
     private String name;
@@ -23,4 +22,5 @@ public class ItemCreateDto {
     private String description;
     @NotNull
     private Boolean available;
+    private Long requestId;
 }

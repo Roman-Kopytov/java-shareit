@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 import java.util.List;
@@ -19,4 +20,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "AND (:text IS NOT NULL AND :text != '') " +
             "AND (i.available = TRUE)")
     List<Item> searchByNameOrDescription(@Param("text") String text);
+
+    List<Item> findItemByRequestIn(List<ItemRequest> ids);
+
+    List<Item> findItemByRequest(ItemRequest request);
 }

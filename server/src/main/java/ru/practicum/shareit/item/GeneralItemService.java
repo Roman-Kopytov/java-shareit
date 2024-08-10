@@ -16,6 +16,8 @@ import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -33,6 +35,7 @@ import static java.util.stream.Collectors.toList;
 public class GeneralItemService implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final ItemRequestRepository itemRequestRepository;
     private final ItemMapper itemMapper;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
@@ -114,6 +117,10 @@ public class GeneralItemService implements ItemService {
         User owner = getUserFromRepository(ownerId);
         Item item = itemMapper.mapToItem(itemCreateDto);
         item.setOwner(owner);
+        if (itemCreateDto.getRequestId() != null) {
+            ItemRequest itemRequest = getItemRequestFromRepository(itemCreateDto.getRequestId());
+            item.setRequest(itemRequest);
+        }
         return itemMapper.mapToShortDto(itemRepository.save(item));
     }
 
@@ -175,6 +182,10 @@ public class GeneralItemService implements ItemService {
         return bookingRepository.findByBookerAndItem(booker, item)
                 .orElseThrow(() -> new NotFoundException("Booking item with id " + item.getId() +
                         " for user with id: " + booker.getId() + " not found"));
+    }
 
+    private ItemRequest getItemRequestFromRepository(long requestId) {
+        return itemRequestRepository.findById(requestId)
+                .orElseThrow(() -> new NotFoundException("ItemRequest not found with id: " + requestId));
     }
 }

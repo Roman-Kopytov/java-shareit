@@ -19,7 +19,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<Object> create(@Valid @RequestBody BookingRequestDto booking,
-                                 @RequestHeader(USER_ID) long bookerId) {
+                                         @RequestHeader(USER_ID) long bookerId) {
         log.info("==>POST /bookings {}, bookerId={}", booking, bookerId);
         ResponseEntity<Object> createdBooking = bookingClient.createBooking(booking, bookerId);
         log.info("POST /bookings <== {}, bookerId={}", createdBooking, bookerId);
@@ -28,8 +28,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> approved(@PathVariable(name = "bookingId") long bookingId,
-                                   @RequestParam(value = "approved") boolean approved,
-                                   @RequestHeader(USER_ID) long bookerId) {
+                                           @RequestParam(value = "approved") boolean approved,
+                                           @RequestHeader(USER_ID) long bookerId) {
         log.info("==>PATCH /bookings/{}?approved={} bookerId={}", bookingId, approved, bookerId);
         BookingParams params = BookingParams.builder()
                 .id(bookingId)
@@ -43,7 +43,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getById(@PathVariable(name = "bookingId") long bookingId,
-                                  @RequestHeader(USER_ID) long userId) {
+                                          @RequestHeader(USER_ID) long userId) {
         log.info("==>GET /bookings/{} by {}", bookingId, userId);
         BookingParams params = BookingParams.builder()
                 .id(bookingId)
@@ -56,7 +56,7 @@ public class BookingController {
 
     @GetMapping
     public ResponseEntity<Object> getBookings(@RequestParam(value = "state", defaultValue = "ALL") String stateParam,
-                                            @RequestHeader(USER_ID) long userId) {
+                                              @RequestHeader(USER_ID) long userId) {
         log.info("==>GET /bookings/?state={} by {}", stateParam, userId);
 
         BookingState state = checkBookingState(stateParam);
@@ -75,7 +75,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public ResponseEntity<Object> getOwnerBookings(@RequestParam(value = "state", defaultValue = "ALL") String stateParam,
-                                                 @RequestHeader(USER_ID) long userId) {
+                                                   @RequestHeader(USER_ID) long userId) {
         log.info("==>GET /bookings/?state={} by {}", stateParam, userId);
 
         BookingState state = checkBookingState(stateParam);
