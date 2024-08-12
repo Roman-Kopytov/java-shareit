@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    @Query("select (count(b) > 0) from Booking b " +
+    @Query("select (count(b) = 0) from Booking b " +
             "where b.item.id = ?1  and b.status = 'APPROVED' " +
             "and b.start <= ?3  and b.end >= ?2")
     boolean isAvailableForBooking(Long itemId, LocalDateTime start, LocalDateTime end);

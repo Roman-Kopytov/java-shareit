@@ -83,4 +83,6 @@ public class BookingController {
         log.info("GET /bookings <== {} by {}", bookingDto, userId);
         return bookingDto;
     }
+
+
 }

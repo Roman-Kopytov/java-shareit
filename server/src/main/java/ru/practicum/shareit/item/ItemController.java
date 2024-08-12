@@ -82,7 +82,7 @@ public class ItemController {
 
     public List<ItemShortDto> search(@RequestParam(name = "text") String text,
                                      @RequestHeader(USER_ID) long userId) {
-        log.info("==>GET /search {}", text);
+        log.info("==>GET /search?text={}", text);
         return itemService.search(text, userId);
     }
 }

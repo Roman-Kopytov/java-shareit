@@ -29,6 +29,7 @@ public class ItemRequestMapper {
 
     public ItemRequestFullDto toItemRequestFullDto(ItemRequest request, List<Item> items) {
         List<ItemRequestFullDto.Item> itemRecords = null;
+
         if (items != null) {
             itemRecords = items.stream().map(i ->
                     new ItemRequestFullDto.Item(i.getId(), i.getName(), i.getOwner().getId())).toList();

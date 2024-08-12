@@ -2,6 +2,8 @@ package ru.practicum.shareit.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +34,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> getAllRequests(@RequestHeader(USER_ID) long userId,
-                                                 @RequestParam(value = "from") Long from,
-                                                 @RequestParam(value = "size") Long size) {
+                                                 @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Long from,
+                                                 @Positive @RequestParam(value = "size", defaultValue = "10") Long size) {
         ItemRequestParams params = new ItemRequestParams(userId, from, size);
         ResponseEntity<Object> dtos = itemRequestClient.getAllRequest(params);
         return dtos;

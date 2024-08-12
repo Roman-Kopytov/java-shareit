@@ -55,31 +55,20 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingFullDTO> getBookings(@RequestParam(value = "state", defaultValue = "ALL") String stateParam,
+    public List<BookingFullDTO> getBookings(@RequestParam(value = "state") BookingState stateParam,
                                             @RequestHeader(USER_ID) long userId) {
         log.info("==>GET /bookings/?state={} by {}", stateParam, userId);
-
-        BookingState state = checkBookingState(stateParam);
-        List<BookingFullDTO> bookingDto = bookingService.getUserBookings(state, userId);
+        List<BookingFullDTO> bookingDto = bookingService.getUserBookings(stateParam, userId);
         log.info("GET /bookings <== {} by {}", bookingDto, userId);
         return bookingDto;
     }
 
-    private static BookingState checkBookingState(String stateParam) {
-        BookingState state = BookingState.from(stateParam);
-        if (state == null) {
-            throw new IllegalArgumentException("Unknown state: " + stateParam);
-        }
-        return state;
-    }
 
     @GetMapping("/owner")
-    public List<BookingFullDTO> getOwnerBookings(@RequestParam(value = "state", defaultValue = "ALL") String stateParam,
+    public List<BookingFullDTO> getOwnerBookings(@RequestParam(value = "state") BookingState stateParam,
                                                  @RequestHeader(USER_ID) long userId) {
         log.info("==>GET /bookings/?state={} by {}", stateParam, userId);
-
-        BookingState state = checkBookingState(stateParam);
-        List<BookingFullDTO> bookingDto = bookingService.getOwnerBookings(state, userId);
+        List<BookingFullDTO> bookingDto = bookingService.getOwnerBookings(stateParam, userId);
         log.info("GET /bookings <== {} by {}", bookingDto, userId);
         return bookingDto;
     }

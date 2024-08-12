@@ -37,7 +37,7 @@ public class GeneralBookingService implements BookingService {
         if (!savedItem.getAvailable()) {
             throw new NotAvailableItem("Item does not available");
         }
-        if (bookingRepository.isAvailableForBooking(savedItem.getId(), bookingDto.getStart(), bookingDto.getEnd())) {
+        if (!bookingRepository.isAvailableForBooking(savedItem.getId(), bookingDto.getStart(), bookingDto.getEnd())) {
             throw new NotAvailableItem("Booking for these dates are not available");
         }
         if (bookerId == savedItem.getOwner().getId()) {

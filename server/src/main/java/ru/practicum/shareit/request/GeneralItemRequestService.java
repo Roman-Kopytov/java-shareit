@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.groupingBy;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class GeneralItemRequestService implements ItemRequestService {
