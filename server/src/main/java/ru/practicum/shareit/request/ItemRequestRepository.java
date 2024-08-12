@@ -9,4 +9,5 @@ public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> 
 
 
     List<ItemRequest> findByRequestor_Id(long userId, Sort sort);
+
 }

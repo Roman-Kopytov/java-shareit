@@ -50,6 +50,7 @@ class ItemRequestRepositoryTest {
         user.setEmail(email);
         return userRepository.save(user);
     }
+
     private Item createItem(String name, String description, boolean available, User owner) {
         Item item = new Item();
         item.setName(name);
