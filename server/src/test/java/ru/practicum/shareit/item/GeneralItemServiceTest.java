@@ -152,6 +152,20 @@ class GeneralItemServiceTest {
         assertThat(item.getOwner(), equalTo(owner));
         assertThat(item.getDescription(), equalTo(description));
         assertThat(savedItem.getAvailable(), equalTo(newItem.getAvailable()));
+
+
+        updatedItem.setId(newItem.getId());
+        updatedItem.setDescription(null);
+        updatedItem.setName(null);
+        savedItem = itemService.update(updatedItem, owner.getId());
+        query = em.createQuery("Select i from Item i where i.id = :id", Item.class);
+        item = query.setParameter("id", newItem.getId())
+                .getSingleResult();
+        assertThat(item.getId(), equalTo(newItem.getId()));
+        assertThat(item.getName(), equalTo(name));
+        assertThat(item.getOwner(), equalTo(owner));
+        assertThat(item.getDescription(), equalTo(description));
+        assertThat(savedItem.getAvailable(), equalTo(newItem.getAvailable()));
     }
 
     @Test

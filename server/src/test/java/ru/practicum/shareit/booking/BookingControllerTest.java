@@ -10,9 +10,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.booking.dto.BookingCreatetDto;
 import ru.practicum.shareit.booking.dto.BookingFullDTO;
 import ru.practicum.shareit.booking.dto.BookingParams;
-import ru.practicum.shareit.booking.dto.BookingRequestDto;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -33,7 +33,7 @@ class BookingControllerTest {
     @MockBean
     BookingService bookingService;
 
-    BookingRequestDto bookingDto;
+    BookingCreatetDto bookingDto;
 
     @Autowired
     MockMvc mockMvc;
@@ -43,7 +43,7 @@ class BookingControllerTest {
         long itemId = 1;
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusDays(1);
-        bookingDto = new BookingRequestDto(start, end, itemId, null);
+        bookingDto = new BookingCreatetDto(start, end, itemId, null);
 
     }
 

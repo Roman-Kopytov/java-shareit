@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.dto.BookingCreatetDto;
 import ru.practicum.shareit.booking.dto.BookingFullDTO;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingParams;
-import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.BookingStatusException;
 import ru.practicum.shareit.exception.NotAvailableItem;
@@ -31,7 +31,7 @@ public class GeneralBookingService implements BookingService {
 
     @Transactional
     @Override
-    public BookingFullDTO create(BookingRequestDto bookingDto, long bookerId) {
+    public BookingFullDTO create(BookingCreatetDto bookingDto, long bookerId) {
         User booker = getUserFromRepository(bookerId);
         Item savedItem = getItemFromRepository(bookingDto.getItemId());
         if (!savedItem.getAvailable()) {
